@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.nature.blog.mapper.ArticleMapper">
+    <insert id="saveOne">
+        insert into tb_article values (#{id}, #{title}, #{userId}, #{categoryId}, #{content}, #{type}, #{cover}, #{state}, #{top}, #{summary}, #{label}, #{viewCount}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="findOneById" resultType="Article">
+        select id, title, user_id, category_id, content, type, cover, state, top, summary, labels as label, view_count, create_time, update_time from tb_article where id = #{id}
+    </select>
+    <update id="updateOneById">
+        update tb_article set title = #{title}, category_id = #{categoryId}, content = #{content}, type = #{type}, cover = #{cover}, state = #{state}, top = #{top}, summary = #{summary}, labels = #{label}, update_time = #{updateTime} where id =#{id}
+    </update>
+    <select id="findAll" resultType="Article">
+        select id, title, user_id, category_id, content, type, cover, state, top, summary, labels as label, view_count, create_time, update_time from tb_article order by create_time DESC
+    </select>
+    <!--%${keyword}%
+        concat('%', #{keyword}, '%')
+        第一种${keyword}不能防止sql注入
+    -->
+    <select id="findPartAllByKeywordOrCategoryIdOrLabelNoContent" resultType="Article">
+        select id, title, user_id, category_id, type, cover, state, top, summary, labels as label, view_count, create_time, update_time from tb_article
+        <where>
+            <if test="keyword != null and keyword != ''">
+                title like concat('%', #{keyword}, '%')
+                    or summary like concat('%', #{keyword}, '%')
+                        or content like concat('%', #{keyword}, '%')
+                            or labels like concat('%', #{label}, '%')
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and category_id = #{categoryId}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+            <if test="label != null and label != ''">
+                and labels like concat('%', #{label}, '%')
+            </if>
+            <if test="top != null and top != ''">
+                and top = #{top}
+            </if>
+        </where>
+        order by top DESC, create_time DESC
+    </select>
+
+    <!--mybatis 级联查询解决方式
+        一对一的分步查询
+    -->
+    <resultMap id="articleAndUser" type="Article">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="userId" column="user_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="cover" column="cover"/>
+        <result property="state" column="state"/>
+        <result property="top" column="top"/>
+        <result property="summary" column="summary"/>
+        <result property="label" column="labels"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="natureUser" javaType=  "NatureUser">
+            <id property="id" column="id"/>
+            <result property="userName" column="user_name"/>
+            <result property="roles" column="roles"/>
+            <result property="avatar" column="avatar"/>
+            <result property="email" column="email"/>
+            <result property="sign" column="sign"/>
+            <result property="state" column="state"/>
+            <result property="regIp" column="reg_ip"/>
+            <result property="loginIp" column="login_ip"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+        </association>
+    </resultMap>
+    <select id="findOneByAndUserIdNoPassword" resultMap="articleAndUser">
+        select a.id, a.title, a.user_id, a.category_id, a.content, a.type, a.cover, a.state, a.top, a.summary, a.labels, a.view_count, a.create_time, a.update_time,
+            u.id, u.user_name, u.roles, u.avatar, u.email, u.sign, u.state, u.reg_ip, u.login_ip, u.create_time, u.update_time
+                from tb_article a inner join tb_user u
+                    on a.user_id = u.id and a.id = #{id}
+    </select>
+
+    <update id="updatePartOneById">
+        update tb_article set title = #{title}, category_id = #{categoryId}, content = #{content}, cover = #{cover}, summary = #{summary}, labels = #{label}, update_time = #{updateTime} where id = #{id}
+    </update>
+    <delete id="deleteOneById">
+        delete from tb_article where id = #{id}
+    </delete>
+    <update id="deleteOneByUpdateState">
+        update tb_article set state = '0' where id = #{id}
+    </update>
+    <update id="updateOneToTop">
+        update tb_article set top = '1' where id = #{id}
+    </update>
+    <update id="updateOneNoTop">
+        update tb_article set top = '0' where id = #{id}
+    </update>
+    <select id="findAllByTop" resultType="Article">
+        select id, title, user_id, category_id, type, cover, state, top, summary, labels as label, view_count, create_time, update_time from tb_article where top = #{top}
+    </select>
+    <select id="findAllByLabel" resultType="Article">
+        select id, title, user_id, category_id, type, cover, state, summary, labels as label, view_count, create_time, update_time
+            from tb_article
+                where labels like concat('%', #{label}, '%') and id != #{id} and (state = '1' or state = '3') limit #{size}
+    </select>
+    <!--通过动态foreach语句，把之前查到的article给过滤掉-->
+    <select id="findNewAll" resultType="Article">
+        select id, title, user_id, category_id, type, cover, state, top, summary, labels as label, view_count, create_time, update_time
+            from tb_article
+                    <where>
+                        <foreach item="article" collection="articleList" open="and id not in (" close=")" separator=", ">
+                            #{article.id}
+                        </foreach>
+                    </where>
+                        and state = '1' and id != #{articleId}
+                        order by create_time DESC
+                            limit #{size}
+    </select>
+    <select id="findNewSpecialAll" resultType="Article">
+        select id, title, user_id, category_id, type, cover, state, top, summary, labels as label, view_count, create_time, update_time
+            from tb_article
+                where id not in (#{originalId}, #{existId}) and state = '1'  limit #{size}
+    </select>
+    <update id="updateViewCountById">
+        update tb_article set view_count = #{newViewCount} where id = #{id}
+    </update>
+    <select id="getArticleCount" resultType="Integer">
+        select count(*) from tb_article
+    </select>
+</mapper>

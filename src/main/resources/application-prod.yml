@@ -1,0 +1,42 @@
+server:
+  port: 2023
+
+spring:
+  application:
+    name: nature-blog-system
+  datasource:
+    druid:
+      url: jdbc:mysql://172.27.221.170:3306/nature_blog_system?characterEncoding=utf-8&useSSL=false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 20200116Rr
+  redis:
+    host: 172.27.221.170
+    port: 6379
+    password: 20200116Rr
+  elasticsearch:
+    rest:
+      uris: http://172.27.221.170:9200
+
+# mybatis
+mybatis:
+  # mapper文件的存放位置 classpath指向的是resource文件夹
+  mapper-locations: classpath:/mapper/*.xml
+  # 是否开启驼峰命名
+  # 包别名
+  type-aliases-package: net.nature.blog.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+nature.blog.image.save-path: /root/docker/images
+nature.blog.image.max-size: 2097152
+
+spring.servlet.multipart.max-file-size: 50MB
+spring.servlet.multipart.max-request-size: 50MB

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.nature.blog.mapper.CommentMapper">
+    <insert id="saveOne">
+        insert into tb_comment values (#{id}, #{parentId}, #{articleId}, #{content}, #{userId}, #{state}, #{top}, #{createTime}, #{updateTime})
+    </insert>
+    <resultMap id="AllCommentAndUser" type="Comment">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="articleId" column="article_id"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="user_id"/>
+        <result property="state" column="state"/>
+        <result property="top" column="top"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="natureUser" javaType="NatureUser">
+            <id property="id" column="id"/>
+            <result property="avatar" column="avatar"/>
+            <result property="userName" column="user_name"/>
+        </association>
+    </resultMap>
+    <resultMap id="CommentAndUser" type="Comment">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="content" column="content"/>
+        <result property="top" column="top"/>
+        <result property="createTime" column="create_time"/>
+        <association property="natureUser" javaType="NatureUser">
+            <id property="id" column="id"/>
+            <result property="avatar" column="avatar"/>
+            <result property="userName" column="user_name"/>
+        </association>
+    </resultMap>
+    <resultMap id="ContentAndUser" type="Comment">
+        <result property="content" column="content"/>
+        <association property="natureUser" javaType="NatureUser">
+            <result property="avatar" column="avatar"/>
+            <result property="userName" column="user_name"/>
+        </association>
+    </resultMap>
+    <select id="findAllNoParentByArticleId" resultMap="CommentAndUser">
+        select c.id, c.parent_id, c.content, c.top, c.create_time, u.id, u.avatar, u.user_name
+            from tb_comment c inner join tb_user u on c.user_id = u.id and article_id = #{articleId} and parent_id is null
+                order by top DESC, create_time DESC
+    </select>
+    <select id="findAllYesParentByArticleId" resultMap="CommentAndUser">
+        select c.id, c.parent_id, c.content, c.top, c.create_time, u.id, u.avatar, u.user_name
+        from tb_comment c inner join tb_user u on c.user_id = u.id and article_id = #{articleId} and parent_id is not null
+        order by top DESC, create_time DESC
+    </select>
+    <select id="findCommentsNew" resultMap="ContentAndUser">
+        select c.content, c.create_time, u.avatar, u.user_name
+        from tb_comment c inner join tb_user u on c.user_id = u.id
+        order by create_time DESC limit #{size};
+    </select>
+    <delete id="deleteOneById">
+        delete from tb_comment where id = #{id}
+    </delete>
+    <select id="findOneUserIdById" resultType="String">
+        select user_id from tb_comment where id = #{id}
+    </select>
+    <select id="findOneTopById" resultType="String">
+        select top from tb_comment where id = #{id}
+    </select>
+    <update id="updatePartOne">
+        update tb_comment set top = #{top} where id = #{id}
+    </update>
+    <select id="findAll" resultMap="AllCommentAndUser">
+        select c.id, c.parent_id, c.article_id, c.content, c.user_id, c.state, c.top, c.create_time, c.update_time, u.id, u.avatar, u.user_name
+        from tb_comment c inner join tb_user u on c.user_id = u.id
+                 <if test="articleId != null and articleId != ''">
+                     and article_id = #{articleId}
+                 </if>
+                 order by top DESC, create_time DESC
+    </select>
+    <delete id="deleteByArticleId">
+        delete from tb_comment where article_id = #{articleId}
+    </delete>
+    <select id="getCommentCount" resultType="Integer">
+        select count(*) from tb_comment
+    </select>
+    <select id="getCommentCountByArticle" resultType="Integer">
+        select count(*) from tb_comment where article_id = #{articleId}
+    </select>
+</mapper>

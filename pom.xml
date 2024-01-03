@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.3</version>
+    </parent>
+
+    <groupId>net.nature</groupId>
+    <artifactId>nature-blog-system</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>nature-blog-system</name>
+    <url>https://www.baidu.com</url>
+    <inceptionYear>2023-Now</inceptionYear>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <spring-cloud-version>2020.0.3</spring-cloud-version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+        <dependencies>
+            <!--spring web-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+
+            <!--db-->
+            <!--jdbc-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jdbc</artifactId>
+            </dependency>
+            <!--mybatis-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>2.2.2</version>
+            </dependency>
+            <!--mysql-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>1.2.8</version>
+            </dependency>
+            <!--pageHelper-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+
+            <!-- log -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.12</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- RESTful APIs swagger2 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+
+            <!--SpringSecurity-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>7.4.0</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!--图灵验证码-->
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+
+            <!--mail相关-->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+
+            <!--redis-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+            </dependency>
+
+            <!--token-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>0.6.0</version>
+            </dependency>
+            <!--es-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+            </dependency>
+            <!--markdown转html-->
+            <dependency>
+                <groupId>com.vladsch.flexmark</groupId>
+                <artifactId>flexmark-all</artifactId>
+                <version>0.50.44</version>
+            </dependency>
+            <!--html转text-->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.12.1</version>
+            </dependency>
+
+            <!--gson-->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.10.1</version>
+            </dependency>
+        </dependencies>
+
+    <build>
+        <finalName>nature-blog-system-1.0.0</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>net.nature.blog.BlogApplication</mainClass>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

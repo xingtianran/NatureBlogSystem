@@ -1,0 +1,50 @@
+{
+  "properties": {
+    "createTime": {
+      "type": "long"
+    },
+    "id": {
+      "type": "keyword"
+    },
+    "label": {
+      "type": "text",
+      "analyzer": "ik_smart",
+      "search_analyzer": "ik_smart",
+      "fields": {
+        "keyword": {
+          "ignore_above": 256,
+          "type": "keyword"
+        }
+      }
+    },
+    "viewCount": {
+      "type": "long"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "ik_smart",
+      "search_analyzer": "ik_smart",
+      "fields": {
+        "keyword": {
+          "ignore_above": 256,
+          "type": "keyword"
+        }
+      }
+    },
+    "categoryId": {
+      "type": "keyword"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "ik_smart",
+      "search_analyzer": "ik_smart",
+      "fields": {
+        "keyword": {
+          "ignore_above": 256,
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+

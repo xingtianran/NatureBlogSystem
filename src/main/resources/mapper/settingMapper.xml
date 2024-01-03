@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.nature.blog.mapper.SettingMapper">
+    <select id="findOneByKey" resultType="Setting">
+        select * from tb_settings where `key` = #{key}
+    </select>
+    <insert id="saveOne">
+        insert into tb_settings values (#{id}, #{key}, #{value}, #{createTime}, #{updateTime})
+    </insert>
+    <update id="updateValueByKey">
+        update tb_settings set value = #{value} where `key`= #{key}
+    </update>
+</mapper>

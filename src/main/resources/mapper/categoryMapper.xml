@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.nature.blog.mapper.CategoryMapper">
+    <insert id="saveOne">
+        insert into tb_categories values (#{id}, #{name}, #{pinyin}, #{description}, #{order}, #{state}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="findOneById" resultType="Category">
+        select * from tb_categories where id = #{id}
+    </select>
+    <select id="findAll" resultType="Category">
+        select * from tb_categories where state = '1' order by `order`, create_time DESC
+    </select>
+    <update id="updatePartOne">
+        update tb_categories set name = #{name}, pinyin = #{pinyin}, description = #{description}, `order` = #{order}, `state` = #{state}, update_time = #{updateTime} where id = #{id}
+    </update>
+    <update id="deleteCategoryByStatus">
+        update tb_categories set state = '0' where id = #{id}
+    </update>
+    <select id="findAllNoDelete" resultType="Category">
+        select * from tb_categories where state = '1'
+    </select>
+    <update id="updateCategoryState">
+        update tb_categories set state = '1' where id = #{id}
+    </update>
+    <select id="getCategoryNameById" resultType="String">
+        select name from tb_categories where id = #{id}
+    </select>
+</mapper>
